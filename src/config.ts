@@ -26,6 +26,7 @@ export interface HoverPhotoGroup {
 export interface SiteConfig {
   name: string;
   email: string;
+  mailtoHref: string;
   title: string;
   description: string;
   bookCallHref: string;
@@ -46,6 +47,7 @@ const pastClients = [
 export const siteConfig: SiteConfig = {
   name,
   email,
+  mailtoHref: `mailto:${email}?subject=Website%20inquiry`,
   title: `${name} — Web designer and developer`,
   description:
     'Independent web designer and developer. I build fast, clean websites from a small studio.',

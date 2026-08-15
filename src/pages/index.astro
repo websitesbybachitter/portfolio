@@ -47,7 +47,7 @@ const faq = [
 					Pricing
 				</a>
 				<a
-					href={`mailto:${siteConfig.email}`}
+					href={siteConfig.mailtoHref}
 					class="text-muted transition-colors duration-150 hover:text-accent"
 				>
 					Email
@@ -69,7 +69,7 @@ const faq = [
 					</p>
 
 					<div class="flex flex-wrap gap-3">
-						<Button href={`mailto:${siteConfig.email}`}>
+						<Button href={siteConfig.mailtoHref}>
 							Email me
 						</Button>
 						<Button href={siteConfig.bookCallHref} variant="secondary">
