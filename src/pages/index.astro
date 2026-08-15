@@ -5,6 +5,29 @@ import Layout from '@/layouts/Layout.astro';
 import { siteConfig } from '@/config';
 
 const hoverPhotos = siteConfig.hoverPhotos;
+
+const faq = [
+  {
+    question: 'How long does it take?',
+    answer:
+      "Somewhere between two and six weeks, depending on how much we're building. You'll get a firm deadline before we start, and I'll keep it.",
+  },
+  {
+    question: 'Is there support after launch?',
+    answer:
+      "Yes. Once the site is live you're not on your own. I'm around for questions and fixes, and if you want regular changes there are maintenance plans from $49 a month, depending on how much editing you need.",
+  },
+  {
+    question: 'What do you build with?',
+    answer:
+      'Astro. It ships as static files, so the site loads fast and stays fast, and the code is simple enough that you can host it anywhere. The site stays yours.',
+  },
+  {
+    question: 'How do we get started?',
+    answer:
+      "Once we agree on scope and price, you pay 50% upfront and the rest when it's done. We work over WhatsApp, Telegram, or email. It takes a few days before there's something to look at; we go through it together and refine until it's right.",
+  },
+] as const;
 ---
 
 <Layout>
@@ -251,81 +274,43 @@ const hoverPhotos = siteConfig.hoverPhotos;
 					<h2 class="font-display text-2xl italic">Questions</h2>
 
 					<div class="mt-6 border-t border-border">
-						<details class="group border-b border-border">
-							<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
-								<span class="w-7 shrink-0 text-xs tabular-nums text-muted">01</span>
-								<span class="flex-1 text-base font-medium">How long does it take?</span>
-								<span
-									aria-hidden="true"
-									class="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
-								>
-									+
-								</span>
-							</summary>
-							<p class="max-w-xl pb-6 pl-[3.25rem] leading-relaxed text-muted">
-								Somewhere between two and six weeks, depending on how much we're
-								building. You'll get a firm deadline before we start, and I'll
-								keep it.
-							</p>
-						</details>
-
-						<details class="group border-b border-border">
-							<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
-								<span class="w-7 shrink-0 text-xs tabular-nums text-muted">02</span>
-								<span class="flex-1 text-base font-medium">Is there support after launch?</span>
-								<span
-									aria-hidden="true"
-									class="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
-								>
-									+
-								</span>
-							</summary>
-							<p class="max-w-xl pb-6 pl-[3.25rem] leading-relaxed text-muted">
-								Yes. Once the site is live you're not on your own. I'm around for
-								questions and fixes, and if you want regular changes there are
-								maintenance plans from $49 a month, depending on how much editing
-								you need.
-							</p>
-						</details>
-
-						<details class="group border-b border-border">
-							<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
-								<span class="w-7 shrink-0 text-xs tabular-nums text-muted">03</span>
-								<span class="flex-1 text-base font-medium">What do you build with?</span>
-								<span
-									aria-hidden="true"
-									class="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
-								>
-									+
-								</span>
-							</summary>
-							<p class="max-w-xl pb-6 pl-[3.25rem] leading-relaxed text-muted">
-								Astro. It ships as static files, so the site loads fast and stays
-								fast, and the code is simple enough that you can host it
-								anywhere. The site stays yours.
-							</p>
-						</details>
-
-						<details class="group border-b border-border">
-							<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
-								<span class="w-7 shrink-0 text-xs tabular-nums text-muted">04</span>
-								<span class="flex-1 text-base font-medium">How do we get started?</span>
-								<span
-									aria-hidden="true"
-									class="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
-								>
-									+
-								</span>
-							</summary>
-							<p class="max-w-xl pb-6 pl-[3.25rem] leading-relaxed text-muted">
-								Once we agree on scope and price, you pay 50% upfront and the rest
-								when it's done. We work over WhatsApp, Telegram, or email. It takes
-								a few days before there's something to look at; we go through it
-								together and refine until it's right.
-							</p>
-						</details>
+						{
+							faq.map((item, index) => (
+								<details class="group border-b border-border">
+									<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
+										<span class="w-7 shrink-0 text-xs tabular-nums text-muted">
+											{String(index + 1).padStart(2, '0')}
+										</span>
+										<span class="flex-1 text-base font-medium">{item.question}</span>
+										<span
+											aria-hidden="true"
+											class="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45"
+										>
+											+
+										</span>
+									</summary>
+									<p class="max-w-xl pb-6 pl-[3.25rem] leading-relaxed text-muted">
+										{item.answer}
+									</p>
+								</details>
+							))
+						}
 					</div>
 				</section>
+
+				<script
+					is:inline
+					type="application/ld+json"
+					set:html={JSON.stringify({
+						'@context': 'https://schema.org',
+						'@type': 'FAQPage',
+						mainEntity: faq.map(({ question, answer }) => ({
+							'@type': 'Question',
+							name: question,
+							acceptedAnswer: { '@type': 'Answer', text: answer },
+						})),
+					})}
+				/>
 
 				<section class="animate-fade-up [animation-delay:700ms]">
 					<p class="leading-relaxed">

@@ -10,6 +10,10 @@ interface Props {
 }
 
 const { title = siteConfig.title, description = siteConfig.description } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://portfolio.websitesbybachitter.workers.dev');
+const siteUrlString = siteUrl.toString().replace(/\/$/, '');
+const ogImage = new URL('/og.png', siteUrl).toString();
 ---
 
 <html lang="en">
@@ -19,8 +23,66 @@ const { title = siteConfig.title, description = siteConfig.description } = Astro
 		<Font cssVariable="--font-fraunces" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<SEO title={title} description={description} />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#fbfbfa" />
+		<SEO
+			title={title}
+			description={description}
+			removeTrailingSlashForRoot
+			openGraph={{
+				basic: {
+					title,
+					type: 'website',
+					image: ogImage,
+					url: siteUrlString,
+				},
+				image: {
+					url: ogImage,
+					width: 1200,
+					height: 630,
+					type: 'image/png',
+					alt: `${siteConfig.name} — Web designer and developer`,
+				},
+				optional: {
+					description,
+					locale: 'en_CA',
+					siteName: siteConfig.name,
+				},
+			}}
+			twitter={{
+				card: 'summary_large_image',
+				title,
+				description,
+				image: ogImage,
+			}}
+		/>
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify({
+				'@context': 'https://schema.org',
+				'@graph': [
+					{
+						'@type': 'Person',
+						'@id': `${siteUrlString}/#person`,
+						name: siteConfig.name,
+						url: siteUrlString,
+						jobTitle: 'Web designer and developer',
+						email: `mailto:${siteConfig.email}`,
+					},
+					{
+						'@type': 'WebSite',
+						'@id': `${siteUrlString}/#website`,
+						url: siteUrlString,
+						name: siteConfig.name,
+						description: siteConfig.description,
+						inLanguage: 'en',
+						publisher: { '@id': `${siteUrlString}/#person` },
+					},
+				],
+			})}
+		/>
 	</head>
 
 	<body class="bg-background text-[15px] text-foreground antialiased">
