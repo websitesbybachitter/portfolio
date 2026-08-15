@@ -1,0 +1,29 @@
+---
+import { Font } from 'astro:assets';
+import { SEO } from 'astro-seo';
+import { siteConfig } from '@/config';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = siteConfig.title, description = siteConfig.description } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<Font cssVariable="--font-instrument-sans" />
+		<Font cssVariable="--font-fraunces" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<SEO title={title} description={description} />
+	</head>
+
+	<body class="bg-background text-[15px] text-foreground antialiased">
+		<slot />
+	</body>
+</html>

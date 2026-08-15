@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "astro": true
+  },
+  "ignorePatterns": ["dist", ".astro", "public"],
+  "plugins": ["import", "typescript"],
+  "rules": {
+    "import/no-cycle": "error",
+    "typescript/no-explicit-any": "error"
+  }
+}

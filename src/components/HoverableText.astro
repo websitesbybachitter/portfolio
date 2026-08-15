@@ -1,0 +1,161 @@
+---
+import { getImage, type ImageMetadata } from 'astro:assets';
+
+interface HoverPhoto {
+  src: string | ImageMetadata;
+  alt: string;
+}
+
+interface OptimizedHoverPhoto {
+  src: string;
+  alt: string;
+}
+
+interface Photo {
+  word: string;
+  photos: HoverPhoto[];
+}
+
+interface Props {
+  text: string;
+  photos: Photo[];
+  class?: string;
+}
+
+const { text, photos, class: classProp = '' } = Astro.props;
+
+const positions = [
+  'z-10 -rotate-12 hover:z-40',
+  'z-20 -ml-2 rotate-2 hover:z-40',
+  'z-30 -ml-2 rotate-12 hover:z-40',
+];
+
+const optimizedPhotos = await Promise.all(
+  photos.map(async (photo) => ({
+    word: photo.word,
+    photos: await Promise.all(
+      photo.photos.map(async (image): Promise<OptimizedHoverPhoto> => {
+        if (typeof image.src === 'string') {
+          return {
+            src: image.src,
+            alt: image.alt,
+          };
+        }
+
+        const optimizedImage = await getImage({
+          src: image.src,
+          width: 388,
+        });
+
+        return {
+          src: optimizedImage.src,
+          alt: image.alt,
+        };
+      }),
+    ),
+  })),
+);
+
+const wordsWithPhotos = optimizedPhotos.filter((photo) => photo.photos.length > 0);
+
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const pattern = new RegExp(
+  `(${wordsWithPhotos.map((photo) => escapeRegExp(photo.word)).join('|')})`,
+  'gi',
+);
+const parts = text.split(pattern).filter((part) => part !== '');
+---
+
+<p class={classProp}>
+  {
+    parts.map((part) => {
+      const photo = wordsWithPhotos.find(
+        (candidate) => candidate.word.toLowerCase() === part.toLowerCase(),
+      );
+
+      return photo ? (
+        <span
+          class={`hover-photos relative cursor-help whitespace-nowrap underline decoration-dotted decoration-1 underline-offset-4 transition-colors duration-150 hover:text-accent group`}
+        >
+          {part}
+          <span
+            data-popover
+            class="pointer-events-none invisible absolute z-50 flex items-end opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100"
+          >
+            {
+              photo.photos.map((image, index) => (
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading="lazy"
+                  class={`aspect-[3/4] w-36 shrink-0 rounded-lg border-4 border-white object-cover object-center ring-1 ring-border shadow-[0_8px_24px_rgba(17,17,17,0.16)] transition-all duration-200 ${positions[index] ?? ''}`}
+                />
+              ))
+            }
+          </span>
+        </span>
+      ) : (
+        <span key={part}>{part}</span>
+      );
+    })
+  }
+</p>
+
+<script>
+	const GAP = 12;
+	const EDGE_MARGIN = 8;
+
+	const getClipContainer = (element) => {
+		let current = element.parentElement;
+		while (current && current !== document.body) {
+			const overflowX = getComputedStyle(current).overflowX;
+			if (['clip', 'hidden', 'auto', 'scroll'].includes(overflowX)) {
+				return current;
+			}
+			current = current.parentElement;
+		}
+		return document.documentElement;
+	};
+
+	document.addEventListener(
+		'pointerenter',
+		(event) => {
+			const word = event.target?.closest?.('.hover-photos');
+			const popover = word?.querySelector('[data-popover]');
+			if (!word || !popover) {
+				return;
+			}
+
+			const wordRect = word.getBoundingClientRect();
+			const container = getClipContainer(word);
+			const containerRect = container.getBoundingClientRect();
+			const popoverWidth = popover.offsetWidth;
+			const popoverHeight = popover.offsetHeight;
+
+			const fitsBelow =
+				wordRect.bottom + popoverHeight + GAP <=
+				containerRect.bottom - EDGE_MARGIN;
+			const fitsAbove =
+				wordRect.top - popoverHeight - GAP >=
+				containerRect.top + EDGE_MARGIN;
+
+			if (fitsBelow && !fitsAbove) {
+				popover.style.top = `${GAP}px`;
+				popover.style.removeProperty('bottom');
+			} else {
+				popover.style.bottom = `${wordRect.height + GAP}px`;
+				popover.style.removeProperty('top');
+			}
+
+			const center = wordRect.left + wordRect.width / 2;
+			const minLeft = containerRect.left + EDGE_MARGIN;
+			const maxLeft = containerRect.right - popoverWidth - EDGE_MARGIN;
+			const desiredLeft = center - popoverWidth / 2;
+			const clampedLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
+
+			popover.style.left = `${clampedLeft - wordRect.left}px`;
+		},
+		true,
+	);
+</script>
