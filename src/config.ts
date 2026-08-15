@@ -1,5 +1,5 @@
+import type { ImageMetadata } from 'astro';
 import bachitterDrivingNight from '@photos/bachitter-driving-night.jpg';
-import bachitterMirrorSelfie from '@photos/bachitter-mirror-selfie.JPG';
 import bachitterSeated from '@photos/bachitter-seated.jpg';
 import photographyLibrary from '@photos/photography-library-bookshelves.JPG';
 import photographyVancouverNight from '@photos/photography-vancouver-harbour-centre-night.jpg';
@@ -7,6 +7,33 @@ import photographySunset from '@photos/photography-vancouver-sunset-silhouette.j
 import vancouverSkytrain from '@photos/vancouver-metrotown-skytrain.JPG';
 import vancouverBusStop from '@photos/vancouver-rainy-bus-stop.JPG';
 import vancouverWaterfront from '@photos/vancouver-waterfront-mountains-sunset.JPG';
+
+export interface PastClient {
+  name: string;
+  url: string;
+}
+
+export interface HoverPhoto {
+  src: ImageMetadata;
+  alt: string;
+}
+
+export interface HoverPhotoGroup {
+  word: string;
+  photos: HoverPhoto[];
+}
+
+export interface SiteConfig {
+  name: string;
+  email: string;
+  title: string;
+  description: string;
+  bookCallHref: string;
+  ogTagline: string;
+  introParagraphs: string[];
+  pastClients: PastClient[];
+  hoverPhotos: HoverPhotoGroup[];
+}
 
 const name = 'Bachitter Chahal';
 const email = 'websitesbybachitter@gmail.com';
@@ -16,7 +43,7 @@ const pastClients = [
   { name: 'GRM Closets & Shower Doors', url: 'https://grmclosetsandshowerdoors.com/' },
 ];
 
-export const siteConfig = {
+export const siteConfig: SiteConfig = {
   name,
   email,
   title: `${name} — Web designer and developer`,
@@ -86,4 +113,4 @@ export const siteConfig = {
       ],
     },
   ],
-} as const;
+};
