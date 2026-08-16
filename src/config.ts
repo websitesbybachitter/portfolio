@@ -1,4 +1,3 @@
-import type { ImageMetadata } from 'astro';
 import bachitterDrivingNight from '@photos/bachitter-driving-night.jpg';
 import bachitterSeated from '@photos/bachitter-seated.jpg';
 import photographyLibrary from '@photos/photography-library-bookshelves.JPG';
@@ -7,6 +6,7 @@ import photographySunset from '@photos/photography-vancouver-sunset-silhouette.j
 import vancouverSkytrain from '@photos/vancouver-metrotown-skytrain.JPG';
 import vancouverBusStop from '@photos/vancouver-rainy-bus-stop.JPG';
 import vancouverWaterfront from '@photos/vancouver-waterfront-mountains-sunset.JPG';
+import type { ImageMetadata } from 'astro';
 
 export interface PastClient {
   name: string;
@@ -23,6 +23,13 @@ export interface HoverPhotoGroup {
   photos: HoverPhoto[];
 }
 
+export interface PricingPlan {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+}
+
 export interface SiteConfig {
   name: string;
   email: string;
@@ -33,6 +40,7 @@ export interface SiteConfig {
   ogTagline: string;
   introParagraphs: string[];
   pastClients: PastClient[];
+  pricingPlans: PricingPlan[];
   hoverPhotos: HoverPhotoGroup[];
 }
 
@@ -43,6 +51,46 @@ const pastClients = [
   { name: 'Vancouver Railings', url: 'https://vancouverrailings.com/' },
   { name: 'GRM Closets & Shower Doors', url: 'https://grmclosetsandshowerdoors.com/' },
 ];
+
+const pricingPlans = [
+  {
+    name: 'Starter',
+    price: 'CAD 599',
+    description: 'For a business that needs a clear, professional online presence.',
+    features: [
+      'One-page website',
+      'Custom design',
+      'Responsive design',
+      'Contact form',
+      'Basic SEO',
+    ],
+  },
+  {
+    name: 'Business',
+    price: 'CAD 1,499',
+    description: 'For contractors and service businesses.',
+    features: [
+      'Up to 5 pages',
+      'Custom design and development',
+      'Projects or portfolio',
+      'Testimonials',
+      'Contact or quote form',
+      'Basic SEO',
+      'Analytics and launch setup',
+    ],
+  },
+  {
+    name: 'Growth',
+    price: 'CAD 2,499+',
+    description: 'For larger websites, more complex functionality, or custom requirements.',
+    features: [
+      'Everything in Business',
+      'More complex functionality',
+      'CMS or editable content',
+      'Advanced SEO setup',
+    ],
+  },
+] satisfies PricingPlan[];
 
 export const siteConfig: SiteConfig = {
   name,
@@ -58,6 +106,7 @@ export const siteConfig: SiteConfig = {
     'Now I build fast, readable websites for contractors and local businesses from a small one-person studio. You work directly with me on the design, build, and small changes after launch, so the site feels clear, useful, and made for the business it represents.',
   ],
   pastClients,
+  pricingPlans,
   hoverPhotos: [
     {
       word: 'bachitter',

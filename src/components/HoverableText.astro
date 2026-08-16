@@ -118,9 +118,15 @@ const parts = text.split(pattern).filter((part) => part !== '');
 		return document.documentElement;
 	};
 
+	const isHoverCapable = window.matchMedia('(hover: hover)').matches;
+
 	document.addEventListener(
 		'pointerenter',
 		(event) => {
+			if (!isHoverCapable) {
+				return;
+			}
+
 			const word = event.target?.closest?.('.hover-photos');
 			const popover = word?.querySelector('[data-popover]');
 			if (!word || !popover) {
@@ -158,4 +164,187 @@ const parts = text.split(pattern).filter((part) => part !== '');
 		},
 		true,
 	);
+
+	if (!isHoverCapable) {
+		const tapWords = document.querySelectorAll('.hover-photos');
+		let openPopover = null;
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const neutralizeAncestors = (element) => {
+		let current = element.parentElement;
+		while (current) {
+			if (getComputedStyle(current).animationName !== 'none') {
+				current.style.animation = 'none';
+			}
+			current = current.parentElement;
+		}
+	};
+
+	const getTransformOrigin = (popover, wordRect, isAbove) => {
+		const popoverLeft = parseFloat(popover.style.left) || 0;
+		const popoverHeight = popover.offsetHeight;
+		const popoverWidth = popover.offsetWidth;
+		const wordCenterX = wordRect.left + wordRect.width / 2;
+		const originX = Math.min(
+			Math.max(wordCenterX - popoverLeft, 0),
+			popoverWidth,
+		);
+		return `${originX}px ${isAbove ? popoverHeight : 0}px`;
+	};
+
+	const hidePopover = (popover) => {
+		if (!popover) {
+			return;
+		}
+		popover.style.zIndex = '';
+		const word = popover.closest('.hover-photos');
+		if (word) {
+			word.style.zIndex = '';
+		}
+		if (reduceMotion) {
+			popover.style.visibility = 'hidden';
+			popover.style.opacity = '0';
+			return;
+		}
+		const wordRect = word.getBoundingClientRect();
+		const popoverRect = popover.getBoundingClientRect();
+		popover.style.transformOrigin = getTransformOrigin(
+			popover,
+			wordRect,
+			popoverRect.top < wordRect.top,
+		);
+		popover.style.transitionDuration = '200ms';
+		popover.style.transform = 'scale(0.6)';
+		popover.style.opacity = '0';
+		popover.style.visibility = 'hidden';
+	};
+
+	const showPopover = (popover, wordRect, side) => {
+		popover.style.transformOrigin = getTransformOrigin(
+			popover,
+			wordRect,
+			side === 'above',
+		);
+
+		popover.style.visibility = 'visible';
+		if (reduceMotion) {
+			popover.style.opacity = '1';
+			return;
+		}
+		popover.style.transitionDuration = '200ms';
+		popover.classList.add('popover-no-anim');
+		popover.style.transform = 'scale(0.6)';
+		popover.style.opacity = '0';
+		void popover.offsetWidth;
+		popover.classList.remove('popover-no-anim');
+		popover.style.transform = 'scale(1)';
+		popover.style.opacity = '1';
+	};
+
+	const positionFixed = (popover, wordRect) => {
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const maxWidth = viewportWidth - 2 * EDGE_MARGIN;
+
+		popover.style.maxWidth = `${maxWidth}px`;
+		popover.style.flexWrap = 'wrap';
+		popover.style.position = 'fixed';
+		popover.style.zIndex = '9999';
+		popover.style.removeProperty('maxHeight');
+		popover.style.removeProperty('overflowY');
+
+		const word = popover.closest('.hover-photos');
+		if (word) {
+			word.style.zIndex = '9999';
+		}
+
+		let popoverWidth = popover.offsetWidth;
+		let popoverHeight = popover.offsetHeight;
+		const usableHeight = viewportHeight - 2 * EDGE_MARGIN;
+		if (popoverHeight > usableHeight) {
+			popover.style.maxHeight = `${usableHeight}px`;
+			popover.style.overflowY = 'auto';
+			popoverHeight = usableHeight;
+		}
+
+		let top;
+		let side;
+		const roomAbove = wordRect.top - EDGE_MARGIN;
+		const roomBelow = viewportHeight - EDGE_MARGIN - wordRect.bottom;
+		const fitsAbove = roomAbove >= popoverHeight + GAP;
+		const fitsBelow = roomBelow >= popoverHeight + GAP;
+
+		if (fitsAbove && (!fitsBelow || roomAbove >= roomBelow)) {
+			top = wordRect.top - popoverHeight - GAP;
+			side = 'above';
+		} else if (fitsBelow) {
+			top = wordRect.bottom + GAP;
+			side = 'below';
+		} else if (roomAbove >= roomBelow) {
+			top = Math.max(EDGE_MARGIN, wordRect.top - popoverHeight - GAP);
+			side = 'above';
+		} else {
+			top = Math.max(
+				EDGE_MARGIN,
+				Math.min(wordRect.bottom + GAP, viewportHeight - popoverHeight - EDGE_MARGIN),
+			);
+			side = 'below';
+		}
+
+		const centeredLeft = wordRect.left + wordRect.width / 2 - popoverWidth / 2;
+		const left = Math.min(
+			Math.max(centeredLeft, EDGE_MARGIN),
+			Math.max(EDGE_MARGIN, viewportWidth - popoverWidth - EDGE_MARGIN),
+		);
+
+		popover.style.top = `${top}px`;
+		popover.style.left = `${left}px`;
+		popover.style.removeProperty('bottom');
+		return side;
+	};
+
+	tapWords.forEach((word) => {
+		word.addEventListener('click', () => {
+			const popover = word.querySelector('[data-popover]');
+			if (!popover) {
+				return;
+			}
+
+			const isOpening = openPopover !== popover;
+			hidePopover(openPopover);
+			openPopover = null;
+
+			if (isOpening) {
+				neutralizeAncestors(word);
+				const wordRect = word.getBoundingClientRect();
+				const side = positionFixed(popover, wordRect);
+				showPopover(popover, wordRect, side);
+				openPopover = popover;
+			}
+		});
+	});
+
+	document.addEventListener(
+		'click',
+		(event) => {
+			if (openPopover && !event.target.closest('.hover-photos')) {
+				hidePopover(openPopover);
+				openPopover = null;
+			}
+		},
+		true,
+	);
+	}
 </script>
+
+<style>
+	[data-popover] {
+		transition-property: transform, opacity, visibility;
+		transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+		transition-behavior: allow-discrete;
+	}
+
+	.popover-no-anim {
+		transition: none !important;
+	}
+</style>
