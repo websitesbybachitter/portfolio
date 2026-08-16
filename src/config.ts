@@ -30,6 +30,11 @@ export interface PricingPlan {
   features: string[];
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface SiteConfig {
   name: string;
   email: string;
@@ -41,6 +46,7 @@ export interface SiteConfig {
   introParagraphs: string[];
   pastClients: PastClient[];
   pricingPlans: PricingPlan[];
+  faq: FaqItem[];
   hoverPhotos: HoverPhotoGroup[];
 }
 
@@ -92,6 +98,29 @@ const pricingPlans = [
   },
 ] satisfies PricingPlan[];
 
+const faq = [
+  {
+    question: 'How long does it take?',
+    answer:
+      "Somewhere between two and six weeks, depending on how much we're building. You'll get a firm deadline before we start, and I'll keep it.",
+  },
+  {
+    question: 'Is there support after launch?',
+    answer:
+      "Yes. Once the site is live you're not on your own. I'm around for questions and fixes, and if you want regular changes there are maintenance plans from $49 a month, depending on how much editing you need.",
+  },
+  {
+    question: 'What do you build with?',
+    answer:
+      'Astro. It ships as static files, so the site loads fast and stays fast, and the code is simple enough that you can host it anywhere. The site stays yours.',
+  },
+  {
+    question: 'How do we get started?',
+    answer:
+      "Once we agree on scope and price, you pay 50% upfront and the rest when it's done. We work over WhatsApp, Telegram, or email. It takes a few days before there's something to look at; we go through it together and refine until it's right.",
+  },
+] satisfies FaqItem[];
+
 export const siteConfig: SiteConfig = {
   name,
   email,
@@ -107,14 +136,11 @@ export const siteConfig: SiteConfig = {
   ],
   pastClients,
   pricingPlans,
+  faq,
   hoverPhotos: [
     {
       word: 'bachitter',
       photos: [
-        // {
-        //   src: bachitterMirrorSelfie,
-        //   alt: 'Mirror selfie of Bachitter',
-        // },
         {
           src: bachitterSeated,
           alt: 'Bachitter sitting with his phone',

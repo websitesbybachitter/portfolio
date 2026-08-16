@@ -1,24 +1,10 @@
 ---
-import { getImage, type ImageMetadata } from 'astro:assets';
-
-interface HoverPhoto {
-  src: string | ImageMetadata;
-  alt: string;
-}
-
-interface OptimizedHoverPhoto {
-  src: string;
-  alt: string;
-}
-
-interface Photo {
-  word: string;
-  photos: HoverPhoto[];
-}
+import { getImage } from 'astro:assets';
+import type { HoverPhotoGroup } from '@/config';
 
 interface Props {
   text: string;
-  photos: Photo[];
+  photos: HoverPhotoGroup[];
   class?: string;
 }
 
@@ -31,25 +17,18 @@ const positions = [
 ];
 
 const optimizedPhotos = await Promise.all(
-  photos.map(async (photo) => ({
-    word: photo.word,
+  photos.map(async (group) => ({
+    word: group.word,
     photos: await Promise.all(
-      photo.photos.map(async (image): Promise<OptimizedHoverPhoto> => {
-        if (typeof image.src === 'string') {
-          return {
-            src: image.src,
-            alt: image.alt,
-          };
-        }
-
+      group.photos.map(async ({ src, alt }) => {
         const optimizedImage = await getImage({
-          src: image.src,
+          src,
           width: 388,
         });
 
         return {
           src: optimizedImage.src,
-          alt: image.alt,
+          alt,
         };
       }),
     ),

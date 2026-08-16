@@ -89,3 +89,15 @@ const ogImage = new URL('/og.png', siteUrl).toString();
 		<slot />
 	</body>
 </html>
+
+<script>
+	document.querySelectorAll('.animate-fade-up').forEach((element) => {
+		element.addEventListener(
+			'animationend',
+			() => {
+				element.style.animation = 'none';
+			},
+			{ once: true },
+		);
+	});
+</script>

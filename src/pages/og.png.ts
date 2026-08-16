@@ -1,13 +1,10 @@
 import type { APIRoute } from 'astro';
-import {
-  fontData,
-  experimental_getFontFileURL,
-  type FontData,
-} from 'astro:assets';
+import { fontData, experimental_getFontFileURL, type FontData } from 'astro:assets';
 import satori from 'satori';
 import { html } from 'satori-html';
 import sharp from 'sharp';
-import { siteConfig } from '../config';
+
+import { siteConfig } from '@/config';
 
 interface FontFace {
   data: ArrayBuffer;
@@ -23,15 +20,14 @@ const getFont = async (
   style: 'normal' | 'italic',
   requestUrl: URL,
 ): Promise<FontFace> => {
-  const entry = entries.find((candidate) =>
-    candidate.weight === weight && (candidate.style ?? 'normal') === style
+  const entry = entries.find(
+    (candidate) => candidate.weight === weight && (candidate.style ?? 'normal') === style,
   );
   if (entry === undefined) {
     throw new Error(`No ${style} ${weight} font face found.`);
   }
 
-  const src =
-    entry.src.find((source) => source.format === 'woff') ?? entry.src[0];
+  const src = entry.src.find((source) => source.format === 'woff') ?? entry.src[0];
   if (src === undefined) {
     throw new Error(`No font file found for ${weight} ${style}.`);
   }
@@ -58,10 +54,14 @@ export const GET: APIRoute = async (context) => {
     >
       <div style="display: flex; height: 5px; width: 68px; background: #0ea5e9;"></div>
       <div style="display: flex; flexDirection: column; gap: 20px;">
-        <div style="display: flex; fontSize: 92px; fontWeight: 600; fontFamily: Fraunces; color: #111111;">
+        <div
+          style="display: flex; fontSize: 92px; fontWeight: 600; fontFamily: Fraunces; color: #111111;"
+        >
           Bachitter Chahal<span style="color: #0ea5e9;">.</span>
         </div>
-        <div style="display: flex; flexDirection: column; gap: 4px; fontSize: 30px; color: #737373; lineHeight: 1.4;">
+        <div
+          style="display: flex; flexDirection: column; gap: 4px; fontSize: 30px; color: #737373; lineHeight: 1.4;"
+        >
           <div>Web designer and developer.</div>
           <div>${siteConfig.ogTagline}</div>
         </div>
@@ -75,10 +75,7 @@ export const GET: APIRoute = async (context) => {
     fonts: [fraunces600, instrument400],
   });
 
-  const png = await sharp(Buffer.from(svg))
-    .resize(1200, 630)
-    .png()
-    .toBuffer();
+  const png = await sharp(Buffer.from(svg)).resize(1200, 630).png().toBuffer();
 
   return new Response(new Uint8Array(png), {
     headers: {

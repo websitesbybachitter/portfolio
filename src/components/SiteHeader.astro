@@ -1,0 +1,28 @@
+---
+interface Props {
+  mailtoHref: string;
+}
+
+const { mailtoHref } = Astro.props;
+
+const links = [
+  { href: '#work', label: 'Work' },
+  { href: '#pricing', label: 'Pricing' },
+  { href: mailtoHref, label: 'Email' },
+];
+---
+
+<header class="mb-16 flex animate-fade-up justify-end">
+	<nav class="flex items-center gap-6 text-sm">
+		{
+			links.map((link) => (
+				<a
+					href={link.href}
+					class="text-muted transition-colors duration-150 hover:text-accent"
+				>
+					{link.label}
+				</a>
+			))
+		}
+	</nav>
+</header>

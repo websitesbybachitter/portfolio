@@ -1,0 +1,75 @@
+
+<footer class="animate-fade-up border-t border-border [animation-delay:700ms]">
+	<div class="mx-auto flex w-full max-w-5xl justify-end p-8 pb-14">
+		<p class="flex select-none items-center gap-1.5 text-xs tabular-nums text-muted">
+			<span class="grid size-6 place-items-center" aria-hidden="true">
+				<svg viewBox="0 0 24 24" class="size-6">
+					<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1" />
+					<line id="clock-hour" x1="12" y1="12" x2="12" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+					<line id="clock-minute" x1="12" y1="12" x2="12" y2="5.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+					<line id="clock-second" x1="12" y1="12" x2="12" y2="4.5" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" class="text-accent" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+					<circle cx="12" cy="12" r="0.9" fill="currentColor" />
+				</svg>
+			</span>
+			<span id="local-time">--:--</span>
+			<span id="local-timezone"></span>
+		</p>
+	</div>
+</footer>
+
+<script>
+	const timeElement = document.getElementById('local-time');
+	const timezoneElement = document.getElementById('local-timezone');
+	const hourHand = document.getElementById('clock-hour');
+	const minuteHand = document.getElementById('clock-minute');
+	const secondHand = document.getElementById('clock-second');
+
+	const timeZone = 'Asia/Kolkata';
+	const timezoneLabel = 'IST';
+
+	const nowInTimeZone = () => new Date(Date.now() + 330 * 60_000);
+
+	const formatTime = (time) =>
+		new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'UTC',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+		}).format(time);
+
+	const rotateHands = (time) => {
+		const hours = time.getUTCHours() % 12;
+		const minutes = time.getUTCMinutes();
+		const seconds = time.getUTCSeconds() + time.getMilliseconds() / 1000;
+
+		if (hourHand) {
+			hourHand.style.transform = `rotate(${(hours + minutes / 60) * 30}deg)`;
+		}
+		if (minuteHand) {
+			minuteHand.style.transform = `rotate(${(minutes + seconds / 60) * 6}deg)`;
+		}
+		if (secondHand) {
+			secondHand.style.transform = `rotate(${seconds * 6}deg)`;
+		}
+	};
+
+	const tick = () => {
+		const time = nowInTimeZone();
+		const formattedTime = formatTime(time);
+
+		if (timeElement?.textContent !== formattedTime) {
+			timeElement.textContent = formattedTime;
+		}
+		if (timezoneElement?.textContent !== ` ${timezoneLabel}`) {
+			timezoneElement.textContent = ` ${timezoneLabel}`;
+		}
+		rotateHands(time);
+	};
+
+	const frame = () => {
+		tick();
+		requestAnimationFrame(frame);
+	};
+
+	frame();
+</script>
