@@ -355,6 +355,21 @@ const parts = text.split(pattern).filter((part) => part !== '');
 		},
 		true,
 	);
+
+	window.addEventListener(
+		'scroll',
+		(event) => {
+			if (!openPopover) {
+				return;
+			}
+			if (event.target instanceof Element && openPopover.contains(event.target)) {
+				return;
+			}
+			hidePopover(openPopover);
+			openPopover = null;
+		},
+		true,
+	);
 	}
 </script>
 
