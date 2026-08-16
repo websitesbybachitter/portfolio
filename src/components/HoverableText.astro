@@ -118,7 +118,23 @@ const parts = text.split(pattern).filter((part) => part !== '');
 		return document.documentElement;
 	};
 
-	const isHoverCapable = window.matchMedia('(hover: hover)').matches;
+	const isTouchDevice =
+		'ontouchstart' in window || navigator.maxTouchPoints > 0;
+	const isHoverCapable =
+		window.matchMedia('(hover: hover)').matches && !isTouchDevice;
+	const randomTilt = () => (Math.random() * 2 - 1) * 10;
+	const isPhoneView = () => window.innerWidth < 768;
+	const applyImageTilts = (popover) => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			return;
+		}
+		popover.querySelectorAll('img').forEach((img) => {
+			const tilt = randomTilt();
+			img.dataset.tilt = String(tilt);
+			img.style.transformOrigin = '50% 100%';
+			img.style.transform = `rotate(${tilt}deg)`;
+		});
+	};
 
 	document.addEventListener(
 		'pointerenter',
@@ -161,6 +177,10 @@ const parts = text.split(pattern).filter((part) => part !== '');
 			const clampedLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
 
 			popover.style.left = `${clampedLeft - wordRect.left}px`;
+
+			if (isPhoneView()) {
+				applyImageTilts(popover);
+			}
 		},
 		true,
 	);
@@ -233,6 +253,7 @@ const parts = text.split(pattern).filter((part) => part !== '');
 		}
 		popover.style.transitionDuration = '200ms';
 		popover.classList.add('popover-no-anim');
+		applyImageTilts(popover);
 		popover.style.transform = 'scale(0.6)';
 		popover.style.opacity = '0';
 		void popover.offsetWidth;
