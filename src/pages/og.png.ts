@@ -57,7 +57,7 @@ export const GET: APIRoute = async (context) => {
         <div
           style="display: flex; fontSize: 92px; fontWeight: 600; fontFamily: Fraunces; color: #111111;"
         >
-          Bachitter Chahal<span style="color: #0ea5e9;">.</span>
+          Bachitter Singh<span style="color: #0ea5e9;">.</span>
         </div>
         <div
           style="display: flex; flexDirection: column; gap: 4px; fontSize: 30px; color: #737373; lineHeight: 1.4;"

@@ -50,7 +50,7 @@ export interface SiteConfig {
   hoverPhotos: HoverPhotoGroup[];
 }
 
-const name = 'Bachitter Chahal';
+const name = 'Bachitter Singh';
 const email = 'websitesbybachitter@gmail.com';
 
 const pastClients = [
