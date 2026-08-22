@@ -1,7 +1,7 @@
 ---
 import Button from '@/components/Button.astro';
 import Layout from '@/layouts/Layout.astro';
-import { siteConfig } from '@/config';
+import { contact } from '@/config';
 ---
 
 <Layout title="Page not found" description="The page you're looking for doesn't exist.">
@@ -17,7 +17,7 @@ import { siteConfig } from '@/config';
 
 			<div class="mt-2 flex flex-wrap gap-3">
 				<Button href="/">Back home</Button>
-				<Button href={siteConfig.mailtoHref} variant="secondary">
+				<Button href={`mailto:${contact.email}?subject=Website%20inquiry`} variant="secondary">
 					Email me
 				</Button>
 			</div>

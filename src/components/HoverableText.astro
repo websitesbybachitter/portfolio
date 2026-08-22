@@ -110,7 +110,7 @@ const segmentsOf = (value: string): Segment[] =>
           ))}
           <span
             data-popover
-            class="pointer-events-none invisible absolute z-50 flex items-end opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100"
+            class="pointer-events-none invisible absolute z-50 flex w-max items-end opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100"
           >
             {
               photo.photos.map((image, index) => (
@@ -118,7 +118,7 @@ const segmentsOf = (value: string): Segment[] =>
                   src={image.src}
                   alt={image.alt}
                   loading="lazy"
-                  class={`aspect-[3/4] w-36 shrink-0 rounded-lg border-4 border-white object-cover object-center ring-1 ring-border transition-all duration-200 ${positions[index] ?? ''}`}
+                  class={`aspect-[3/4] w-36 max-w-none shrink-0 rounded-lg border-4 border-white object-cover object-center ring-1 ring-border transition-all duration-200 ${positions[index] ?? ''}`}
                 />
               ))
             }
@@ -140,6 +140,10 @@ const segmentsOf = (value: string): Segment[] =>
 </p>
 
 <script>
+	// ---------------------------------------------------------------------------
+	// Constants & shared helpers
+	// ---------------------------------------------------------------------------
+
 	const GAP = 12;
 	const EDGE_MARGIN = 8;
 
@@ -159,19 +163,10 @@ const segmentsOf = (value: string): Segment[] =>
 		'ontouchstart' in window || navigator.maxTouchPoints > 0;
 	const isHoverCapable =
 		window.matchMedia('(hover: hover)').matches && !isTouchDevice;
-	const randomTilt = () => (Math.random() * 2 - 1) * 10;
-	const isPhoneView = () => window.innerWidth < 768;
-	const applyImageTilts = (popover) => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			return;
-		}
-		popover.querySelectorAll('img').forEach((img) => {
-			const tilt = randomTilt();
-			img.dataset.tilt = String(tilt);
-			img.style.transformOrigin = '50% 100%';
-			img.style.transform = `rotate(${tilt}deg)`;
-		});
-	};
+
+	// ---------------------------------------------------------------------------
+	// Hover-capable devices: place the popover above/below the word
+	// ---------------------------------------------------------------------------
 
 	document.addEventListener(
 		'pointerenter',
@@ -214,18 +209,33 @@ const segmentsOf = (value: string): Segment[] =>
 			const clampedLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
 
 			popover.style.left = `${clampedLeft - wordRect.left}px`;
-
-			if (isPhoneView()) {
-				applyImageTilts(popover);
-			}
 		},
 		true,
 	);
+
+	// ---------------------------------------------------------------------------
+	// Touch devices: tap to open, tap elsewhere to close, fixed positioning
+	// ---------------------------------------------------------------------------
 
 	if (!isHoverCapable) {
 		const tapWords = document.querySelectorAll('.hover-photos');
 		let openPopover = null;
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		const randomTilt = () => (Math.random() * 2 - 1) * 10;
+		const isPhoneView = () => window.innerWidth < 768;
+
+		const applyImageTilts = (popover) => {
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				return;
+			}
+			popover.querySelectorAll('img').forEach((img) => {
+				const tilt = randomTilt();
+				img.dataset.tilt = String(tilt);
+				img.style.transformOrigin = '50% 100%';
+				img.style.transform = `rotate(${tilt}deg)`;
+			});
+		};
 
 	const neutralizeAncestors = (element) => {
 		let current = element.parentElement;

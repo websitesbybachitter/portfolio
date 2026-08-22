@@ -4,7 +4,7 @@ import satori from 'satori';
 import { html } from 'satori-html';
 import sharp from 'sharp';
 
-import { siteConfig } from '@/config';
+import { contact } from '@/config';
 
 interface FontFace {
   data: ArrayBuffer;
@@ -43,6 +43,9 @@ const getFont = async (
   return { data, name, weight: Number(weight), style };
 };
 
+const heroTitle = 'Websites for contractors & local businesses';
+const heroSubtitle = 'Custom design and development, built directly with you.';
+
 export const GET: APIRoute = async (context) => {
   const fraunces = fontData['--font-fraunces'];
   const instrument = fontData['--font-instrument-sans'];
@@ -58,14 +61,14 @@ export const GET: APIRoute = async (context) => {
     >
       <div style="display: flex; height: 5px; width: 68px; background: #12294b;"></div>
       <div style="display: flex; flexDirection: column; gap: 24px;">
-        <div style="display: flex; fontSize: 30px; color: #53647a;">${siteConfig.studioName}</div>
+        <div style="display: flex; fontSize: 30px; color: #53647a;">${contact.studioName}</div>
         <div
           style="display: flex; fontSize: 72px; fontWeight: 600; fontFamily: Fraunces; color: #12294b; lineHeight: 1.15;"
         >
-          ${siteConfig.heroTitle}<span style="color: #5b82b2;">.</span>
+          ${heroTitle}<span style="color: #5b82b2;">.</span>
         </div>
         <div style="display: flex; fontSize: 30px; color: #53647a; lineHeight: 1.4;">
-          ${siteConfig.heroSubtitle}
+          ${heroSubtitle}
         </div>
       </div>
     </div>

@@ -1,21 +1,19 @@
 ---
 import HoverableText from '@/components/HoverableText.astro';
-import type { HoverPhotoGroup } from '@/config';
+import { hoverPhotos } from '@/config';
 
-interface Props {
-  paragraphs: string[];
-  photos: HoverPhotoGroup[];
-}
-
-const { paragraphs, photos } = Astro.props;
+const aboutParagraphs = [
+  "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ਜੀ (Sat Sri Akal ji). I'm ਬਚਿੱਤਰ (Bachitter). I grew up in ਪੰਜਾਬ (Punjab), India, spent six and a half years living in Vancouver, and eventually found my way back home.",
+  'Somewhere along the way, I became interested in clean design, photography, and the small details that make things feel considered. I like figuring out how things are put together, then making them simpler and easier to use.',
+];
 ---
 
 <section id="about" class="animate-fade-up [animation-delay:400ms]">
 	<h2 class="font-display text-2xl italic">About Bachitter</h2>
 
 	<div class="mt-6 flex max-w-xl flex-col gap-6 leading-relaxed text-muted">
-		{paragraphs.map((paragraph) => (
-			<HoverableText text={paragraph} photos={photos} />
+		{aboutParagraphs.map((paragraph) => (
+			<HoverableText text={paragraph} photos={hoverPhotos} />
 		))}
 	</div>
 </section>

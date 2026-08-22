@@ -1,7 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import { SEO } from 'astro-seo';
-import { siteConfig } from '@/config';
+import { contact, seo } from '@/config';
 import '../styles/global.css';
 
 interface Props {
@@ -9,9 +9,9 @@ interface Props {
   description?: string;
 }
 
-const { title = siteConfig.title, description = siteConfig.description } = Astro.props;
+const { title = seo.title, description = seo.description } = Astro.props;
 
-const siteUrl = Astro.site ?? new URL('https://portfolio.websitesbybachitter.workers.dev');
+const siteUrl = Astro.site ?? new URL(seo.siteUrl);
 const siteUrlString = siteUrl.toString().replace(/\/$/, '');
 const ogImage = new URL('/og.png', siteUrl).toString();
 ---
@@ -27,6 +27,7 @@ const ogImage = new URL('/og.png', siteUrl).toString();
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content="#f7f5f0" />
+		<meta name="keywords" content={seo.keywords.join(', ')} />
 		<SEO
 			title={title}
 			description={description}
@@ -43,12 +44,12 @@ const ogImage = new URL('/og.png', siteUrl).toString();
 					width: 1200,
 					height: 630,
 					type: 'image/png',
-					alt: `${siteConfig.name} — Web designer and developer`,
+					alt: `${contact.name} — Web designer and developer`,
 				},
 				optional: {
 					description,
 					locale: 'en_CA',
-					siteName: siteConfig.name,
+					siteName: contact.name,
 				},
 			}}
 			twitter={{
@@ -67,17 +68,17 @@ const ogImage = new URL('/og.png', siteUrl).toString();
 					{
 						'@type': 'Person',
 						'@id': `${siteUrlString}/#person`,
-						name: siteConfig.name,
+						name: contact.name,
 						url: siteUrlString,
 						jobTitle: 'Web designer and developer',
-						email: `mailto:${siteConfig.email}`,
+						email: `mailto:${contact.email}`,
 					},
 					{
 						'@type': 'WebSite',
 						'@id': `${siteUrlString}/#website`,
 						url: siteUrlString,
-						name: siteConfig.name,
-						description: siteConfig.description,
+						name: contact.name,
+						description,
 						inLanguage: 'en',
 						publisher: { '@id': `${siteUrlString}/#person` },
 					},

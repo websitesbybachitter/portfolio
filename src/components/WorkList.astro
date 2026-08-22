@@ -1,14 +1,7 @@
 ---
-import type { PastClient } from '@/config';
+import { contact, pastClients } from '@/config';
 
-interface Props {
-  clients: PastClient[];
-  bookCallHref: string;
-}
-
-const { clients, bookCallHref } = Astro.props;
-
-const visibleClients = clients.slice(0, 6);
+const visibleClients = pastClients.slice(0, 6);
 ---
 
 <section id="work" class="animate-fade-up [animation-delay:300ms]">
@@ -45,7 +38,7 @@ const visibleClients = clients.slice(0, 6);
 		}
 		<li class="border-b border-border">
 			<a
-				href={bookCallHref}
+				href={contact.bookCallHref}
 				class="group flex items-baseline gap-6 px-2 py-4 transition-colors duration-150 hover:bg-(--surface-subtle) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
 			>
 				<span class="w-7 shrink-0 text-xs tabular-nums text-faint transition-colors duration-150 group-hover:text-accent">

@@ -1,12 +1,5 @@
 ---
-import type { PricingPlan } from '@/config';
-
-interface Props {
-  plans: PricingPlan[];
-  note: string;
-}
-
-const { plans, note } = Astro.props;
+import { pricingPlans } from '@/config';
 ---
 
 <section id="pricing" class="animate-fade-up [animation-delay:500ms]">
@@ -14,7 +7,7 @@ const { plans, note } = Astro.props;
 
 	<ul class="mt-6 grid gap-4">
 		{
-			plans.map((plan, index) => (
+			pricingPlans.map((plan, index) => (
 				<li class="rounded-xl border border-border bg-surface p-6">
 					<div class="flex items-baseline justify-between gap-6">
 						<div class="flex items-baseline gap-6">
@@ -42,6 +35,6 @@ const { plans, note } = Astro.props;
 	</ul>
 
 	<p class="mt-6 rounded-lg bg-surface-subtle px-4 py-3 text-sm leading-relaxed text-muted">
-		{note}
+		Every project is quoted based on its scope.
 	</p>
 </section>

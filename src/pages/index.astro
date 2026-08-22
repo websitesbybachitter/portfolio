@@ -6,9 +6,12 @@ import PricingSection from '@/components/PricingSection.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import WorkList from '@/components/WorkList.astro';
 import Layout from '@/layouts/Layout.astro';
-import { siteConfig } from '@/config';
+import { contact } from '@/config';
 
-const hoverPhotos = siteConfig.hoverPhotos;
+const introParagraphs = [
+  'A website should do more than just look good. It should help people understand your business, trust it, and choose you.',
+  'I design and build custom websites with that in mind — clear, considered, and made around the business behind them.',
+];
 ---
 
 <Layout>
@@ -19,7 +22,7 @@ const hoverPhotos = siteConfig.hoverPhotos;
 			<aside class="mb-16 flex flex-col gap-8 lg:sticky lg:top-16 lg:mb-0 lg:col-span-4 lg:self-start lg:gap-12">
 				<header class="flex animate-fade-up flex-col gap-4">
 					<h1 class="font-display text-4xl font-medium md:text-5xl">
-						{siteConfig.name}
+						{contact.name}
 						<span class="text-accent">.</span>
 					</h1>
 					<p class="flex flex-wrap items-center gap-x-2 text-sm text-muted">
@@ -29,10 +32,10 @@ const hoverPhotos = siteConfig.hoverPhotos;
 					</p>
 
 					<div class="flex flex-wrap gap-3">
-						<Button href={siteConfig.mailtoHref}>
+						<Button href={`mailto:${contact.email}?subject=Website%20inquiry`}>
 							Email me
 						</Button>
-						<Button href={siteConfig.bookCallHref} variant="secondary">
+						<Button href={contact.bookCallHref} variant="secondary">
 							Book a call
 						</Button>
 					</div>
@@ -55,30 +58,30 @@ const hoverPhotos = siteConfig.hoverPhotos;
 
 			<div class="flex flex-col gap-16 lg:col-span-8">
 				<section class="flex max-w-xl animate-fade-up flex-col gap-6 leading-relaxed text-muted [animation-delay:160ms]">
-					{siteConfig.introParagraphs.map((paragraph) => (
+					{introParagraphs.map((paragraph) => (
 						<p>{paragraph}</p>
 					))}
 				</section>
 
-				<WorkList clients={siteConfig.pastClients} bookCallHref={siteConfig.bookCallHref} />
+				<WorkList />
 
-				<AboutSection paragraphs={siteConfig.aboutParagraphs} photos={hoverPhotos} />
+				<AboutSection />
 
-				<PricingSection plans={siteConfig.pricingPlans} note={siteConfig.pricingNote} />
+				<PricingSection />
 
-				<FaqSection items={siteConfig.faq} />
+				<FaqSection />
 
 				<section class="animate-fade-up [animation-delay:700ms]">
 					<div class="rounded-2xl bg-surface-dark px-8 py-10 text-inverse ring-1 ring-border-dark">
-						<h2 class="font-display text-2xl italic">Need something different?</h2>
+						<h2 class="font-display text-2xl italic">{`Need something different?`}</h2>
 						<p class="mt-3 max-w-md leading-relaxed text-inverse/80">
-							Every project is custom quoted. Tell me what you have in mind.
+							{`Every project is custom quoted. Tell me what you have in mind.`}
 						</p>
 						<div class="mt-6 flex flex-wrap gap-3">
-							<Button href={siteConfig.bookCallHref} variant="inverse">
+							<Button href={contact.bookCallHref} variant="inverse">
 								Book a call
 							</Button>
-							<Button href={siteConfig.mailtoHref} variant="ghost">
+							<Button href={`mailto:${contact.email}?subject=Website%20inquiry`} variant="ghost">
 								Email me
 							</Button>
 						</div>
