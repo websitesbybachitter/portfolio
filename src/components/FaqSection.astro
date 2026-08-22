@@ -16,7 +16,7 @@ const { items } = Astro.props;
 			items.map((item, index) => (
 				<details class="group border-b border-border">
 					<summary class="flex cursor-pointer list-none items-baseline gap-6 py-5 select-none transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden marker:hidden">
-						<span class="w-7 shrink-0 text-xs tabular-nums text-muted">
+						<span class="w-7 shrink-0 text-xs tabular-nums text-faint">
 							{String(index + 1).padStart(2, '0')}
 						</span>
 						<span class="flex-1 text-base font-medium">{item.question}</span>

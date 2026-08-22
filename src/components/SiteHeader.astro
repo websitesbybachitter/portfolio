@@ -1,14 +1,8 @@
 ---
-interface Props {
-  mailtoHref: string;
-}
-
-const { mailtoHref } = Astro.props;
-
 const links = [
   { href: '#work', label: 'Work' },
+  { href: '#about', label: 'About' },
   { href: '#pricing', label: 'Pricing' },
-  { href: mailtoHref, label: 'Email' },
 ];
 ---
 

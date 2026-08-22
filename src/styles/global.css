@@ -1,14 +1,104 @@
 @import 'tailwindcss';
 
+:root {
+  /* -------------------------------------------------------
+     BRAND
+     ------------------------------------------------------- */
+
+  /* Primary brand color */
+  --brand: #12294b;
+
+  /* Interactive states */
+  --brand-hover: #1a3a68;
+  --brand-active: #0b1d36;
+
+  /* Subtle brand tint */
+  --brand-subtle: #e8eef5;
+
+  /* -------------------------------------------------------
+     BACKGROUNDS & SURFACES
+     ------------------------------------------------------- */
+
+  /* Main warm background */
+  --background: #f7f5f0;
+
+  /* Primary surface */
+  --surface: #f1efe9;
+
+  /* Alternate / muted surface */
+  --surface-subtle: #f4f2ed;
+
+  /* Dark sections */
+  --surface-dark: #12294b;
+
+  /* -------------------------------------------------------
+     TEXT
+     ------------------------------------------------------- */
+
+  /* Primary text and headings */
+  --text-primary: #12294b;
+
+  /* Supporting text */
+  --text-secondary: #53647a;
+
+  /* Less prominent text */
+  --text-muted: #7b8797;
+
+  /* Text on dark backgrounds */
+  --text-inverse: #f7f5f0;
+
+  /* -------------------------------------------------------
+     BORDERS
+     ------------------------------------------------------- */
+
+  /* Default border */
+  --border: #d9dde2;
+
+  /* Softer border */
+  --border-subtle: #e8e9e6;
+
+  /* Border on dark backgrounds */
+  --border-dark: rgba(247, 245, 240, 0.2);
+
+  /* -------------------------------------------------------
+     INTERACTIVE
+     ------------------------------------------------------- */
+
+  /* Keyboard focus */
+  --focus: #5b82b2;
+}
+
 @theme {
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-gurmukhi: var(--font-noto-gurmukhi), var(--font-instrument-sans), ui-sans-serif, system-ui,
+    sans-serif;
 
-  --color-background: #fbfbfa;
-  --color-foreground: #111111;
-  --color-muted: #737373;
-  --color-border: #e5e5e5;
-  --color-accent: #0ea5e9;
+  /* Brand */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
+  --color-brand-subtle: var(--brand-subtle);
+
+  /* Backgrounds & surfaces */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-dark: var(--surface-dark);
+
+  /* Text */
+  --color-foreground: var(--text-primary);
+  --color-muted: var(--text-secondary);
+  --color-faint: var(--text-muted);
+  --color-inverse: var(--text-inverse);
+
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-dark: var(--border-dark);
+
+  /* Interactive */
+  --color-accent: var(--focus);
 }
 
 @layer base {
@@ -25,8 +115,7 @@
       background-color 120ms ease,
       border-color 120ms ease,
       opacity 120ms ease,
-      transform 120ms ease,
-      box-shadow 120ms ease;
+      transform 120ms ease;
   }
 
   details::details-content {
@@ -42,8 +131,8 @@
   }
 
   ::selection {
-    background-color: var(--color-accent);
-    color: #ffffff;
+    background-color: var(--color-brand-subtle);
+    color: var(--color-foreground);
   }
 
   body::after {

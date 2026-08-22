@@ -44,6 +44,50 @@ const pattern = new RegExp(
   'gi',
 );
 const parts = text.split(pattern).filter((part) => part !== '');
+
+const gurmukhiSource = '[\\u0A00-\\u0A7F]+(?:[\\s\\u00A0][\\u0A00-\\u0A7F]+)*';
+
+const gurmukhiSegmentRegExp = new RegExp(
+  `(${gurmukhiSource}(?:\\s*\\([^)]+\\))?)`,
+  'gu',
+);
+
+interface Segment {
+  gurmukhi: string;
+  translation: string;
+  text: string;
+}
+
+const segmentsOf = (value: string): Segment[] =>
+  value
+    .split(gurmukhiSegmentRegExp)
+    .filter((segment) => segment !== undefined && segment !== '')
+    .map<Segment>((segment) => {
+      const withTranslation = segment.match(
+        new RegExp(`^(${gurmukhiSource})(\\s*\\([^)]+\\))$`, 'u'),
+      );
+      if (withTranslation) {
+        return { gurmukhi: withTranslation[1], translation: withTranslation[2], text: '' };
+      }
+
+      const gurmukhiOnly = segment.match(new RegExp(`^(${gurmukhiSource})$`, 'u'));
+      if (gurmukhiOnly) {
+        return { gurmukhi: gurmukhiOnly[1], translation: '', text: '' };
+      }
+
+      // A bracketed translation directly after a hover-photo word lands in
+      // this segment because the word was already split off.
+      const leadingBracket = segment.match(/^(\s*\([^)]+\))/);
+      if (leadingBracket) {
+        return {
+          gurmukhi: '',
+          translation: leadingBracket[1],
+          text: segment.slice(leadingBracket[1].length),
+        };
+      }
+
+      return { gurmukhi: '', translation: '', text: segment };
+    });
 ---
 
 <p class={classProp}>
@@ -57,7 +101,13 @@ const parts = text.split(pattern).filter((part) => part !== '');
         <span
           class={`hover-photos relative cursor-help whitespace-nowrap underline decoration-dotted decoration-1 underline-offset-4 transition-colors duration-150 hover:text-accent group`}
         >
-          {part}
+          {segmentsOf(part).map((segment) => (
+            <>
+              {segment.gurmukhi && <span class="font-gurmukhi">{segment.gurmukhi}</span>}
+              {segment.translation && <span class="text-faint">{segment.translation}</span>}
+              {segment.text}
+            </>
+          ))}
           <span
             data-popover
             class="pointer-events-none invisible absolute z-50 flex items-end opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100"
@@ -68,14 +118,22 @@ const parts = text.split(pattern).filter((part) => part !== '');
                   src={image.src}
                   alt={image.alt}
                   loading="lazy"
-                  class={`aspect-[3/4] w-36 shrink-0 rounded-lg border-4 border-white object-cover object-center ring-1 ring-border shadow-[0_8px_24px_rgba(17,17,17,0.16)] transition-all duration-200 ${positions[index] ?? ''}`}
+                  class={`aspect-[3/4] w-36 shrink-0 rounded-lg border-4 border-white object-cover object-center ring-1 ring-border transition-all duration-200 ${positions[index] ?? ''}`}
                 />
               ))
             }
           </span>
         </span>
       ) : (
-        <span key={part}>{part}</span>
+        <span key={part}>
+          {segmentsOf(part).map((segment) => (
+            <>
+              {segment.gurmukhi && <span class="font-gurmukhi">{segment.gurmukhi}</span>}
+              {segment.translation && <span class="text-faint">{segment.translation}</span>}
+              {segment.text}
+            </>
+          ))}
+        </span>
       );
     })
   }

@@ -1,0 +1,21 @@
+---
+import HoverableText from '@/components/HoverableText.astro';
+import type { HoverPhotoGroup } from '@/config';
+
+interface Props {
+  paragraphs: string[];
+  photos: HoverPhotoGroup[];
+}
+
+const { paragraphs, photos } = Astro.props;
+---
+
+<section id="about" class="animate-fade-up [animation-delay:400ms]">
+	<h2 class="font-display text-2xl italic">About Bachitter</h2>
+
+	<div class="mt-6 flex max-w-xl flex-col gap-6 leading-relaxed text-muted">
+		{paragraphs.map((paragraph) => (
+			<HoverableText text={paragraph} photos={photos} />
+		))}
+	</div>
+</section>

@@ -37,13 +37,17 @@ export interface FaqItem {
 
 export interface SiteConfig {
   name: string;
+  studioName: string;
   email: string;
   mailtoHref: string;
   title: string;
   description: string;
   bookCallHref: string;
-  ogTagline: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  pricingNote: string;
   introParagraphs: string[];
+  aboutParagraphs: string[];
   pastClients: PastClient[];
   pricingPlans: PricingPlan[];
   faq: FaqItem[];
@@ -51,7 +55,11 @@ export interface SiteConfig {
 }
 
 const name = 'Bachitter Singh';
+const studioName = 'Websites by Bachitter';
 const email = 'websitesbybachitter@gmail.com';
+
+const heroTitle = 'Websites for contractors & local businesses';
+const heroSubtitle = 'Custom design and development, built directly with you.';
 
 const pastClients = [
   { name: 'Vancouver Railings', url: 'https://vancouverrailings.com/' },
@@ -60,9 +68,9 @@ const pastClients = [
 
 const pricingPlans = [
   {
-    name: 'Starter',
+    name: 'Simple site',
     price: 'CAD 599',
-    description: 'For a business that needs a clear, professional online presence.',
+    description: 'For a business that needs a simple, professional website.',
     features: [
       'One-page website',
       'Custom design',
@@ -72,7 +80,7 @@ const pricingPlans = [
     ],
   },
   {
-    name: 'Business',
+    name: 'Contractor website',
     price: 'CAD 1,499',
     description: 'For contractors and service businesses.',
     features: [
@@ -86,11 +94,11 @@ const pricingPlans = [
     ],
   },
   {
-    name: 'Growth',
+    name: 'Custom project',
     price: 'CAD 2,499+',
-    description: 'For larger websites, more complex functionality, or custom requirements.',
+    description: 'For larger websites or projects with more complex requirements.',
     features: [
-      'Everything in Business',
+      'Everything included in the Contractor Website',
       'More complex functionality',
       'CMS or editable content',
       'Advanced SEO setup',
@@ -100,46 +108,53 @@ const pricingPlans = [
 
 const faq = [
   {
-    question: 'How long does it take?',
+    question: 'How long does a website take?',
     answer:
       "Somewhere between two and six weeks, depending on how much we're building. You'll get a firm deadline before we start, and I'll keep it.",
   },
   {
-    question: 'Is there support after launch?',
+    question: 'What do you need from me?',
     answer:
-      "Yes. Once the site is live you're not on your own. I'm around for questions and fixes, and if you want regular changes there are maintenance plans from $49 a month, depending on how much editing you need.",
+      "Less than you might expect. If you have photos, a logo, or a list of your services, that's a great start. If you don't, we'll figure it out together. I'll ask a few questions about your business, handle the design and writing, and keep the back-and-forth to WhatsApp, Telegram, or email — whichever you prefer.",
   },
   {
-    question: 'What do you build with?',
+    question: 'Will I be able to update the website?',
     answer:
-      'Astro. It ships as static files, so the site loads fast and stays fast, and the code is simple enough that you can host it anywhere. The site stays yours.',
+      "That depends on how your website is set up. If your project includes a CMS, you'll be able to update the agreed content yourself without touching code. For websites without editable content, you can request changes whenever you need them. One-off updates can be quoted separately, or ongoing changes can be covered by a maintenance plan. The website and its accounts remain under your ownership, so you're never locked in.",
   },
   {
-    question: 'How do we get started?',
+    question: 'Is support available after launch?',
     answer:
-      "Once we agree on scope and price, you pay 50% upfront and the rest when it's done. We work over WhatsApp, Telegram, or email. It takes a few days before there's something to look at; we go through it together and refine until it's right.",
+      "Yes. I'll fix any issues caused by my work after launch and answer any questions about handing over the website. Future updates or ongoing support can be quoted separately or covered through a maintenance plan.",
   },
 ] satisfies FaqItem[];
 
 export const siteConfig: SiteConfig = {
   name,
+  studioName,
   email,
   mailtoHref: `mailto:${email}?subject=Website%20inquiry`,
-  title: `${name} — Web designer and developer`,
+  title: `${studioName} — Web designer & developer`,
   description:
-    'Independent web designer and developer. I build fast, clean websites from a small studio.',
+    'Custom-designed, fast websites for contractors and local businesses. Built directly with you, from design to launch.',
   bookCallHref: `https://cal.com/websitesbybachitter/free-discovery-call`,
-  ogTagline: 'Fast, readable websites — yours to keep.',
+  heroTitle,
+  heroSubtitle,
+  pricingNote: 'Every project is quoted based on its scope.',
   introParagraphs: [
-    "I'm Bachitter, from Punjab, India. I spent six and a half years in Vancouver before moving back home, and somewhere along the way I got pulled into clean design, photography, and the small details that make things feel considered. I like figuring out how things are put together, then making them simpler and easier to use.",
-    'Now I build fast, readable websites for contractors and local businesses from a small one-person studio. You work directly with me on the design, build, and small changes after launch, so the site feels clear, useful, and made for the business it represents.',
+    'A website should do more than just look good. It should help people understand your business, trust it, and choose you.',
+    'I design and build custom websites with that in mind — clear, considered, and made around the business behind them.',
+  ],
+  aboutParagraphs: [
+    "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ਜੀ (Sat Sri Akal ji). I'm ਬਚਿੱਤਰ (Bachitter). I grew up in ਪੰਜਾਬ (Punjab), India, spent six and a half years living in Vancouver, and eventually found my way back home.",
+    'Somewhere along the way, I became interested in clean design, photography, and the small details that make things feel considered. I like figuring out how things are put together, then making them simpler and easier to use.',
   ],
   pastClients,
   pricingPlans,
   faq,
   hoverPhotos: [
     {
-      word: 'bachitter',
+      word: 'ਬਚਿੱਤਰ',
       photos: [
         {
           src: bachitterSeated,
@@ -152,7 +167,7 @@ export const siteConfig: SiteConfig = {
       ],
     },
     {
-      word: 'punjab',
+      word: 'ਪੰਜਾਬ',
       photos: [],
     },
     {

@@ -3,34 +3,35 @@ import type { PricingPlan } from '@/config';
 
 interface Props {
   plans: PricingPlan[];
+  note: string;
 }
 
-const { plans } = Astro.props;
+const { plans, note } = Astro.props;
 ---
 
 <section id="pricing" class="animate-fade-up [animation-delay:500ms]">
 	<h2 class="font-display text-2xl italic">Pricing</h2>
 
-	<ul class="mt-6 border-t border-border">
+	<ul class="mt-6 grid gap-4">
 		{
 			plans.map((plan, index) => (
-				<li class="border-b border-border py-6">
+				<li class="rounded-xl border border-border bg-surface p-6">
 					<div class="flex items-baseline justify-between gap-6">
 						<div class="flex items-baseline gap-6">
-							<span class="w-7 shrink-0 text-xs tabular-nums text-muted">
+							<span class="w-7 shrink-0 text-xs tabular-nums text-faint">
 								{String(index + 1).padStart(2, '0')}
 							</span>
 							<h3 class="text-base font-semibold">{plan.name}</h3>
 						</div>
-						<p class="shrink-0 text-sm text-accent">{plan.price}</p>
+						<p class="shrink-0 text-sm font-semibold text-accent">{plan.price}</p>
 					</div>
 					<p class="mt-3 max-w-xl pl-[3.25rem] leading-relaxed text-muted">
 						{plan.description}
 					</p>
-					<ul class="mt-3 space-y-1.5 pl-[3.25rem]">
+					<ul class="mt-4 space-y-2 border-t border-border-subtle pl-[3.25rem] pt-4">
 						{plan.features.map((feature) => (
 							<li class="flex gap-2 text-sm text-muted">
-								<span aria-hidden="true">·</span>
+								<span aria-hidden="true" class="text-faint">·</span>
 								<span>{feature}</span>
 							</li>
 						))}
@@ -39,4 +40,8 @@ const { plans } = Astro.props;
 			))
 		}
 	</ul>
+
+	<p class="mt-6 rounded-lg bg-surface-subtle px-4 py-3 text-sm leading-relaxed text-muted">
+		{note}
+	</p>
 </section>

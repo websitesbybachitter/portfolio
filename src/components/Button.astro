@@ -4,7 +4,7 @@ interface Props {
   type?: 'button' | 'submit';
   rel?: string;
   target?: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'inverse' | 'ghost';
   class?: string;
 }
 
@@ -15,12 +15,27 @@ const baseClass =
   'inline-flex items-center justify-center gap-x-2 rounded-lg px-[calc(--spacing(3)-1px)] py-[calc(--spacing(2)-1px)] text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
 const primaryClass =
-  'relative isolate border border-transparent bg-(--btn-border) text-white before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-(--btn-bg) before:shadow-sm after:absolute after:inset-0 after:-z-10 after:rounded-[calc(var(--radius-lg)-1px)] after:shadow-[inset_0_1px_--theme(--color-white/15%)] active:after:bg-(--btn-hover-overlay)/30 hover:after:bg-(--btn-hover-overlay)/15 [--btn-bg:var(--color-accent)] [--btn-border:var(--color-sky-500)] [--btn-hover-overlay:var(--color-sky-600)]';
+  'relative isolate border border-transparent bg-(--btn-border) text-inverse before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-(--btn-bg) [--btn-bg:var(--color-brand)] [--btn-border:var(--color-brand)] hover:[--btn-bg:var(--color-brand-hover)] active:[--btn-bg:var(--color-brand-active)]';
 
 const secondaryClass =
-  'border border-border bg-transparent text-foreground hover:bg-black/5';
+  'border border-border bg-transparent text-foreground hover:bg-surface-subtle';
 
-const className = `${baseClass} ${variant === 'secondary' ? secondaryClass : primaryClass} ${classProp}`;
+const inverseClass =
+  'border border-transparent bg-surface text-brand hover:bg-brand-subtle';
+
+const ghostClass =
+  'border border-border-dark bg-transparent text-inverse hover:bg-white/10';
+
+const variantClass =
+  variant === 'secondary'
+    ? secondaryClass
+    : variant === 'inverse'
+      ? inverseClass
+      : variant === 'ghost'
+        ? ghostClass
+        : primaryClass;
+
+const className = `${baseClass} ${variantClass} ${classProp}`;
 ---
 
 {

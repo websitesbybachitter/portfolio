@@ -47,5 +47,14 @@ export default defineConfig({
       subsets: ['latin'],
       formats: ['woff2', 'woff'],
     },
+    {
+      name: 'Noto Sans Gurmukhi',
+      cssVariable: '--font-noto-gurmukhi',
+      provider: fontProviders.fontsource(),
+      weights: ['400', '500', '600'],
+      styles: ['normal'],
+      subsets: ['gurmukhi', 'latin'],
+      formats: ['woff2'],
+    },
   ],
 });

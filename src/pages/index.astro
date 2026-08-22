@@ -1,9 +1,8 @@
 ---
+import AboutSection from '@/components/AboutSection.astro';
 import Button from '@/components/Button.astro';
 import FaqSection from '@/components/FaqSection.astro';
-import HoverableText from '@/components/HoverableText.astro';
 import PricingSection from '@/components/PricingSection.astro';
-import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import WorkList from '@/components/WorkList.astro';
 import Layout from '@/layouts/Layout.astro';
@@ -14,7 +13,7 @@ const hoverPhotos = siteConfig.hoverPhotos;
 
 <Layout>
 	<main class="mx-auto w-full max-w-5xl overflow-x-clip px-8 pb-24 pt-16 lg:pt-24">
-		<SiteHeader mailtoHref={siteConfig.mailtoHref} />
+		<SiteHeader />
 
 		<div class="lg:grid lg:grid-cols-12 lg:gap-16">
 			<aside class="mb-16 flex flex-col gap-8 lg:sticky lg:top-16 lg:mb-0 lg:col-span-4 lg:self-start lg:gap-12">
@@ -37,38 +36,112 @@ const hoverPhotos = siteConfig.hoverPhotos;
 							Book a call
 						</Button>
 					</div>
+
+					<p class="mt-2 flex select-none items-center gap-2 text-sm tabular-nums text-muted">
+						<span class="grid size-7 place-items-center" aria-hidden="true">
+							<svg viewBox="0 0 24 24" class="size-7">
+								<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1" />
+								<line id="clock-hour" x1="12" y1="12" x2="12" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+								<line id="clock-minute" x1="12" y1="12" x2="12" y2="5.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+								<line id="clock-second" x1="12" y1="12" x2="12" y2="4.5" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" class="text-accent" style="transform-box: fill-box; transform-origin: 50% 100%;" />
+								<circle cx="12" cy="12" r="0.9" fill="currentColor" />
+							</svg>
+						</span>
+						<span id="local-time">--:--</span>
+						<span id="local-timezone" class="text-xs text-faint"></span>
+					</p>
 				</header>
 			</aside>
 
 			<div class="flex flex-col gap-16 lg:col-span-8">
 				<section class="flex max-w-xl animate-fade-up flex-col gap-6 leading-relaxed text-muted [animation-delay:160ms]">
-					{
-						siteConfig.introParagraphs.map((paragraph) => (
-							<HoverableText text={paragraph} photos={hoverPhotos} />
-						))
-					}
+					{siteConfig.introParagraphs.map((paragraph) => (
+						<p>{paragraph}</p>
+					))}
 				</section>
 
 				<WorkList clients={siteConfig.pastClients} bookCallHref={siteConfig.bookCallHref} />
 
-				<PricingSection plans={siteConfig.pricingPlans} />
+				<AboutSection paragraphs={siteConfig.aboutParagraphs} photos={hoverPhotos} />
+
+				<PricingSection plans={siteConfig.pricingPlans} note={siteConfig.pricingNote} />
 
 				<FaqSection items={siteConfig.faq} />
 
 				<section class="animate-fade-up [animation-delay:700ms]">
-					<p class="leading-relaxed">
-						Need something different?{' '}
-						<a
-							href={siteConfig.bookCallHref}
-							class="decoration-accent decoration-1 underline underline-offset-4 transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-						>
-							Let's talk.
-						</a>
-					</p>
+					<div class="rounded-2xl bg-surface-dark px-8 py-10 text-inverse ring-1 ring-border-dark">
+						<h2 class="font-display text-2xl italic">Need something different?</h2>
+						<p class="mt-3 max-w-md leading-relaxed text-inverse/80">
+							Every project is custom quoted. Tell me what you have in mind.
+						</p>
+						<div class="mt-6 flex flex-wrap gap-3">
+							<Button href={siteConfig.bookCallHref} variant="inverse">
+								Book a call
+							</Button>
+							<Button href={siteConfig.mailtoHref} variant="ghost">
+								Email me
+							</Button>
+						</div>
+					</div>
 				</section>
 			</div>
 		</div>
 	</main>
-
-	<SiteFooter />
 </Layout>
+
+<script>
+	const timeElement = document.getElementById('local-time');
+	const timezoneElement = document.getElementById('local-timezone');
+	const hourHand = document.getElementById('clock-hour');
+	const minuteHand = document.getElementById('clock-minute');
+	const secondHand = document.getElementById('clock-second');
+
+	const timeZone = 'Asia/Kolkata';
+	const timezoneLabel = 'IST';
+
+	const nowInTimeZone = () => new Date(Date.now() + 330 * 60_000);
+
+	const formatTime = (time) =>
+		new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'UTC',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+		}).format(time);
+
+	const rotateHands = (time) => {
+		const hours = time.getUTCHours() % 12;
+		const minutes = time.getUTCMinutes();
+		const seconds = time.getUTCSeconds() + time.getMilliseconds() / 1000;
+
+		if (hourHand) {
+			hourHand.style.transform = `rotate(${(hours + minutes / 60) * 30}deg)`;
+		}
+		if (minuteHand) {
+			minuteHand.style.transform = `rotate(${(minutes + seconds / 60) * 6}deg)`;
+		}
+		if (secondHand) {
+			secondHand.style.transform = `rotate(${seconds * 6}deg)`;
+		}
+	};
+
+	const tick = () => {
+		const time = nowInTimeZone();
+		const formattedTime = formatTime(time);
+
+		if (timeElement?.textContent !== formattedTime) {
+			timeElement.textContent = formattedTime;
+		}
+		if (timezoneElement?.textContent !== ` ${timezoneLabel}`) {
+			timezoneElement.textContent = ` ${timezoneLabel}`;
+		}
+		rotateHands(time);
+	};
+
+	const frame = () => {
+		tick();
+		requestAnimationFrame(frame);
+	};
+
+	frame();
+</script>

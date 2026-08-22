@@ -9,7 +9,7 @@ import { siteConfig } from '@/config';
 interface FontFace {
   data: ArrayBuffer;
   name: string;
-  weight: number;
+  weight: string;
   style: 'normal' | 'italic';
 }
 
@@ -27,7 +27,11 @@ const getFont = async (
     throw new Error(`No ${style} ${weight} font face found.`);
   }
 
-  const src = entry.src.find((source) => source.format === 'woff') ?? entry.src[0];
+  // Satori cannot parse woff2, so prefer woff/opentype sources when available.
+  const src =
+    entry.src.find((source) => source.format === 'woff' || source.format === 'opentype') ??
+    entry.src.find((source) => source.format !== 'woff2') ??
+    entry.src[0];
   if (src === undefined) {
     throw new Error(`No font file found for ${weight} ${style}.`);
   }
@@ -50,20 +54,18 @@ export const GET: APIRoute = async (context) => {
 
   const markup = html`
     <div
-      style="width: 100%; height: 100%; display: flex; flexDirection: column; justifyContent: space-between; backgroundColor: #fbfbfa; padding: 80px 96px; fontFamily: Instrument Sans;"
+      style="width: 100%; height: 100%; display: flex; flexDirection: column; justifyContent: space-between; backgroundColor: #f7f5f0; padding: 80px 96px; fontFamily: Instrument Sans;"
     >
-      <div style="display: flex; height: 5px; width: 68px; background: #0ea5e9;"></div>
-      <div style="display: flex; flexDirection: column; gap: 20px;">
+      <div style="display: flex; height: 5px; width: 68px; background: #12294b;"></div>
+      <div style="display: flex; flexDirection: column; gap: 24px;">
+        <div style="display: flex; fontSize: 30px; color: #53647a;">${siteConfig.studioName}</div>
         <div
-          style="display: flex; fontSize: 92px; fontWeight: 600; fontFamily: Fraunces; color: #111111;"
+          style="display: flex; fontSize: 72px; fontWeight: 600; fontFamily: Fraunces; color: #12294b; lineHeight: 1.15;"
         >
-          Bachitter Singh<span style="color: #0ea5e9;">.</span>
+          ${siteConfig.heroTitle}<span style="color: #5b82b2;">.</span>
         </div>
-        <div
-          style="display: flex; flexDirection: column; gap: 4px; fontSize: 30px; color: #737373; lineHeight: 1.4;"
-        >
-          <div>Web designer and developer.</div>
-          <div>${siteConfig.ogTagline}</div>
+        <div style="display: flex; fontSize: 30px; color: #53647a; lineHeight: 1.4;">
+          ${siteConfig.heroSubtitle}
         </div>
       </div>
     </div>
